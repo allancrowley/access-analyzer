@@ -31,6 +31,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>com.access</groupId>
+                <artifactId>access-analyzer-api</artifactId>
+                <version>0.0.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -44,7 +50,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>annotationProcessor</scope>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
