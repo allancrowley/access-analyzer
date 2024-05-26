@@ -1,13 +1,13 @@
-package com.access.ipanalyzer;
+package com.access;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class IpAnalyzerApplication {
+public class IpFilterApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(IpAnalyzerApplication.class, args);
+        SpringApplication.run(IpFilterApplication.class, args);
     }
 
 }

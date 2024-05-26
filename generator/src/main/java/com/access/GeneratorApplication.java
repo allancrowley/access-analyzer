@@ -1,15 +1,13 @@
-package com.access.emailprovider;
+package com.access;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-
-public class EmailProviderApplication {
+public class GeneratorApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EmailProviderApplication.class, args);
+        SpringApplication.run(GeneratorApplication.class, args);
     }
 
 }

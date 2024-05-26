@@ -1,13 +1,13 @@
-package com.access.blockinglistpipulator;
+package com.access;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BlockingListPipulatorApplication {
+public class IpAnalyzerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BlockingListPipulatorApplication.class, args);
+        SpringApplication.run(IpAnalyzerApplication.class, args);
     }
 
 }

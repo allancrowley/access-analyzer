@@ -98,7 +98,14 @@
     </build>
 
     <modules>
+        <module>blocked-ip-provider</module>
+        <module>blocking-list-populator</module>
+        <module>data-extractor</module>
         <module>email-provider</module>
+        <module>generator</module>
+        <module>group-notifier</module>
+        <module>ip-analyzer</module>
+        <module>ip-filter</module>
     </modules>
     
 </project>

@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.access</groupId>
-    <artifactId>blocking-list-pipulator</artifactId>
+    <artifactId>blocking-list-populator</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>blocking-list-pipulator</name>
     <description>blocking-list-pipulator</description>

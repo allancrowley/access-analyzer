@@ -1,13 +1,13 @@
-package com.access.blockedipprovider;
+package com.access;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BlockedIpProviderApplication {
+public class GroupNotifierApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BlockedIpProviderApplication.class, args);
+        SpringApplication.run(GroupNotifierApplication.class, args);
     }
 
 }

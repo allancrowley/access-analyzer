@@ -1,13 +1,13 @@
-package com.access.generator;
+package com.access;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GeneratorApplication {
+public class EmailProviderApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GeneratorApplication.class, args);
+        SpringApplication.run(EmailProviderApplication.class, args);
     }
 
 }
