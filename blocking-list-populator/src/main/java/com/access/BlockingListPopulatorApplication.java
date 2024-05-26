@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BlockingListPipulatorApplication {
+public class BlockingListPopulatorApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BlockingListPipulatorApplication.class, args);
+        SpringApplication.run(BlockingListPopulatorApplication.class, args);
     }
 
 }
