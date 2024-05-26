@@ -66,6 +66,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.access</groupId>
+            <artifactId>access-analyzer-api</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>
