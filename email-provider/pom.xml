@@ -6,7 +6,7 @@
         <groupId>com.access</groupId>
         <artifactId>access-analyzer</artifactId>
         <version>0.0.1</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.access</groupId>
     <artifactId>email-provider</artifactId>
