@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.function.Consumer;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.access")
 @RequiredArgsConstructor
 @Slf4j
 public class IpAnalyzerApplication {
