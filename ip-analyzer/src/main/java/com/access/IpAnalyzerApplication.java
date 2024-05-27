@@ -32,6 +32,5 @@ public class IpAnalyzerApplication {
     private void processAuthFailure(AuthFailureDto authFailureDto) {
         log.trace("received authentication failure data: {}", authFailureDto);
         ipAnalyzerService.processAuthFailure(authFailureDto, producerBindingName);
-
     }
 }
