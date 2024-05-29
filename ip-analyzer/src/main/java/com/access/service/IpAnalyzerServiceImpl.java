@@ -29,7 +29,7 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
     long timePeriod;
 
     @Override
-    public void processAuthFailure(AuthFailureDto dto, String producerBindingName) {
+    public void processAuthFailure(AuthFailureDto dto) {
         // Retrieve the FailureList for the given subnet
         Optional<FailureList> optionalFailureList = failuresCounterRepo.findById(dto.subnet());
         FailureList failureList;
