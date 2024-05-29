@@ -11,6 +11,7 @@ import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.TreeMap;
 
@@ -19,7 +20,8 @@ import java.util.TreeMap;
 @Slf4j
 public class IpAnalyzerServiceImpl implements IpAnalyzerService {
     final StreamBridge streamBridge;
-    AttackAttemptDto attackAttemptDto;
+    @Value("${app.analyzer.producer.binding.name}")
+    String producerBindingName;
     FailuresCounterRepo failuresCounterRepo;
     @Value("${app.analyzer.threshold}")
     int threshold;
@@ -28,33 +30,46 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
 
     @Override
     public void processAuthFailure(AuthFailureDto dto, String producerBindingName) {
+        // Retrieve the FailureList for the given subnet
         Optional<FailureList> optionalFailureList = failuresCounterRepo.findById(dto.subnet());
+        FailureList failureList;
         if (optionalFailureList.isPresent()) {
-            TreeMap<Long, String> attemptsMap = optionalFailureList.get().getAttemptsMap();
-            attemptsMapProcessing(attemptsMap);
+            // If FailureList exists, process the authentication failure
+            failureList = optionalFailureList.get();
+            attemptsMapProcessing(failureList, dto);
         } else {
+            // If FailureList does not exist, create a new one and save it to the repository
             failuresCounterRepo.save(new FailureList(dto.subnet(), new TreeMap<>(Map.of(dto.timestamp(), dto.webserviceName()))));
-            log.debug("failed authentication attempt for service {} from ip {} registered at {}", dto.webserviceName(), dto.subnet(), dto.timestamp());
         }
-        log.debug("attack attempt data identified: {}", attackAttemptDto);
-
     }
 
-    private void attemptsMapProcessing(TreeMap<Long, String> attemptsMap) {
-        if(attemptsMap.size()>=50){
-  }
+    private void attemptsMapProcessing(FailureList failureList, AuthFailureDto dto) {
+        TreeMap<Long, String> attemptsMap = failureList.getAttemptsMap();
+        // Filter the attemptsMap to include only entries within the specified time period
+        NavigableMap<Long, String> recentAttempts = attemptsMap.tailMap(System.currentTimeMillis() - timePeriod, true);
+        if (recentAttempts.size() < threshold - 1) {
+            // If the number of authentication attempts is below the threshold, add the new attempt
+            attemptsMap.put(dto.timestamp(), dto.webserviceName());
+            // Save the updated FailureList back to the repository
+            failuresCounterRepo.save(failureList);
+            log.debug("Failed authentication attempt for service {} from IP {} registered at {}", dto.webserviceName(), dto.subnet(), dto.timestamp());
+        } else {
+            // If the number of authentication attempts exceeds the threshold, send an alert
+            sendAlert(recentAttempts, dto.subnet());
+            // Delete the FailureList from the repository
+            failuresCounterRepo.deleteById(dto.subnet());
+            log.debug("Failed authentication attempts from IP {} equal to {} and data is deleted from cache and sent to database", dto.subnet(), recentAttempts.size());
+        }
     }
 
-    private void IncrementCounter(String ip) {
-
-    }
-
-    private boolean checkThreshold(String ip) {
-        return false;
-    }
-
-    private void sendAlert(AttackAttemptDto attackAttemptDto, String producerBindingName) {
+    private void sendAlert(NavigableMap<Long, String> recentAttempts, String subnet) {
+        // Convert the services in attemptsMap to an array
+        String[] services = recentAttempts.values().toArray(new String[0]);
+        // Create an AttackAttemptDto for the alert
+        AttackAttemptDto attackAttemptDto = new AttackAttemptDto(subnet, recentAttempts.lastKey(), services);
+        log.debug("New attack attempt data object created {}", attackAttemptDto);
+        // Send the alert using StreamBridge
         streamBridge.send(producerBindingName, attackAttemptDto);
-        log.debug("attack attempt data {} sent by {}", attackAttemptDto, producerBindingName);
+        log.debug("Attack attempt data {} sent by {}", attackAttemptDto, producerBindingName);
     }
 }

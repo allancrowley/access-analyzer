@@ -15,8 +15,6 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 @Slf4j
 public class IpAnalyzerApplication {
-    @Value("${app.analyzer.producer.binding.name}")
-    String producerBindingName;
     final IpAnalyzerService ipAnalyzerService;
 
 
