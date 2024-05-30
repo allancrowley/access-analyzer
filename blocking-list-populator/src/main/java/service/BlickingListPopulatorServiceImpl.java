@@ -10,6 +10,7 @@ import repo.AttackAttemptRepo;
 import repo.IpSubnetRepo;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -30,7 +31,7 @@ public class BlickingListPopulatorServiceImpl implements BlockingListPopulatorSe
             log.debug("subnet {} already exists", duplicateIpSubnet.get().getIpSubnet());
         }
         List <AttackAttemptEntity> entities = buildAllAttackAttemptEntity(attackAttemptDto);
-        attemptRepo.findBy
+
         return null;
     }
 
@@ -41,15 +42,13 @@ public class BlickingListPopulatorServiceImpl implements BlockingListPopulatorSe
                 .ipSubnet(attackAttemptDto.subnet())
                 .build();
 
-        for(String name: attackAttemptDto.services()){
-            AttackAttemptEntity attackAttemptEntity = AttackAttemptEntity
-                    .builder()
-                    .ipSubnet(subnet)
-                    .timestamp(attackAttemptDto.timestamp())
+        entities = attackAttemptDto.services().stream().map(name ->
+            AttackAttemptEntity.builder()
                     .serviceName(name)
-                    .build();
-            entities.add(attackAttemptEntity);
-        }
+                    .timestamp(attackAttemptDto.timestamp())
+                    .ipSubnet(subnet)
+                    .build()
+        ).collect(Collectors.toList());
 
         return entities;
     }
