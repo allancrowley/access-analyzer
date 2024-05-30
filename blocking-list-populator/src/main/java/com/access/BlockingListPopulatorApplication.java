@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 @Slf4j
 @RequiredArgsConstructor
 public class BlockingListPopulatorApplication {
-    final BlockingListPopulatorService blockingListPopulatorService;
+    private final BlockingListPopulatorService service;
 
     public static void main(String[] args) {
         SpringApplication.run(BlockingListPopulatorApplication.class, args);
