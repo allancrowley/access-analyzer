@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +64,7 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
 
     private void sendAlert(NavigableMap<Long, String> recentAttempts, String subnet) {
         // Convert the services in attemptsMap to an array
-        String[] services = recentAttempts.values().toArray(new String[0]);
+        List<String> services = new ArrayList<>(recentAttempts.values());
         // Create an AttackAttemptDto for the alert
         AttackAttemptDto attackAttemptDto = new AttackAttemptDto(subnet, recentAttempts.lastKey(), services);
         log.debug("New attack attempt data object created {}", attackAttemptDto);
