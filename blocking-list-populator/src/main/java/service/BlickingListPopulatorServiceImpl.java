@@ -31,10 +31,12 @@ public class BlickingListPopulatorServiceImpl implements BlockingListPopulatorSe
             log.debug("subnet {} already exists", duplicateIpSubnet.get().getIpSubnet());
         }
         List <AttackAttemptEntity> entities = buildAllAttackAttemptEntity(attackAttemptDto);
-
-        return null;
+        log.debug("get list of entities: {}", entities);
+        attemptRepo.saveAll(entities);
+        log.debug("added entities: {}", entities);
+        return attackAttemptDto;
     }
-
+    // Method that takes a DTO and creates a list of entities
     private List<AttackAttemptEntity> buildAllAttackAttemptEntity(AttackAttemptDto attackAttemptDto){
         List<AttackAttemptEntity> entities = new ArrayList<>();
         IpSubnetEntity subnet = IpSubnetEntity
