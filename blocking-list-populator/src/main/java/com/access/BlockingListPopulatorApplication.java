@@ -20,13 +20,16 @@ public class BlockingListPopulatorApplication {
     public static void main(String[] args) {
         SpringApplication.run(BlockingListPopulatorApplication.class, args);
     }
-
+    @Bean
     Consumer<AttackAttemptDto> blockingListPopulatorConsumer() {
-        return null;
+        return this::BlockingIpDtoPopulation;
     }
 
     private void BlockingIpDtoPopulation(AttackAttemptDto attackAttemptDto){
-
+        log.debug("received attackAttemptDto: {}", attackAttemptDto);
+        service.addAttackAttemptDot(attackAttemptDto);
+        log.debug("blocking ip: {} and attack attempt {} saved to Database"
+                , attackAttemptDto.subnet(), attackAttemptDto);
     }
 
 
