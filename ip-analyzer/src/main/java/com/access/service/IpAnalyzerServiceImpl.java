@@ -19,14 +19,14 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 public class IpAnalyzerServiceImpl implements IpAnalyzerService {
-    final StreamBridge streamBridge;
+    private final StreamBridge streamBridge;
     @Value("${app.analyzer.producer.binding.name}")
-    String producerBindingName;
-    FailuresCounterRepo failuresCounterRepo;
+    private String producerBindingName;
+    private final FailuresCounterRepo failuresCounterRepo;
     @Value("${app.analyzer.threshold}")
-    int threshold;
+    private int threshold;
     @Value("${app.analyzer.time.period}")
-    long timePeriod;
+    private long timePeriod;
 
     @Override
     public void processAuthFailure(AuthFailureDto dto) {
@@ -52,13 +52,17 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
             attemptsMap.put(dto.timestamp(), dto.webserviceName());
             // Save the updated FailureList back to the repository
             failuresCounterRepo.save(failureList);
-            log.debug("Failed authentication attempt for service {} from IP {} registered at {}", dto.webserviceName(), dto.subnet(), dto.timestamp());
+            log.debug("Failed authentication attempt for service {} from IP {} registered in cache at {}", dto.webserviceName(), dto.subnet(), dto.timestamp());
         } else {
-            // If the number of authentication attempts exceeds the threshold, send an alert
-            sendAlert(recentAttempts, dto.subnet());
-            // Delete the FailureList from the repository
-            failuresCounterRepo.deleteById(dto.subnet());
-            log.debug("Failed authentication attempts from IP {} equal to {} and data is deleted from cache and sent to database", dto.subnet(), recentAttempts.size());
+            if (failuresCounterRepo.existsById(dto.subnet())) {
+                // Delete the FailureList from the repository
+                failuresCounterRepo.deleteById(dto.subnet());
+                log.debug("Failed authentication attempts from IP {} equal to {} and data is deleted from cache and sent to database", dto.subnet(), recentAttempts.size());
+                // If the number of authentication attempts exceeds the threshold, send an alert
+                sendAlert(recentAttempts, dto.subnet());
+            } else {
+                log.warn("Attempted to delete non-existing entity with subnet {}", dto.subnet());
+            }
         }
     }
 
