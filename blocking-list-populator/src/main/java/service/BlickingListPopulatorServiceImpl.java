@@ -20,16 +20,12 @@ public class BlickingListPopulatorServiceImpl implements BlockingListPopulatorSe
     final AttackAttemptRepo attemptRepo;
     @Override
     public AttackAttemptDto addAttackAttemptDot(AttackAttemptDto attackAttemptDto) {
-        Optional <IpSubnetEntity> duplicateIpSubnet =  ipSubnetRepo.findById(attackAttemptDto.subnet());
-        if(!duplicateIpSubnet.isPresent()) {
             IpSubnetEntity newIpSubnetEntity = IpSubnetEntity.builder()
                     .ipSubnet(attackAttemptDto.subnet())
                     .build();
             ipSubnetRepo.save(newIpSubnetEntity);
             log.debug("Added ip subnet: {}", newIpSubnetEntity);
-        }else{
-            log.debug("subnet {} already exists", duplicateIpSubnet.get().getIpSubnet());
-        }
+        // creat list of entities
         List <AttackAttemptEntity> entities = buildAllAttackAttemptEntity(attackAttemptDto);
         log.debug("get list of entities: {}", entities);
         attemptRepo.saveAll(entities);
