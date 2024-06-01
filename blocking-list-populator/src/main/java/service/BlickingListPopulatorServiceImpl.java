@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import model.AttackAttemptEntity;
 import model.IpSubnetEntity;
 import org.springframework.stereotype.Service;
+
 import repo.AttackAttemptRepo;
 import repo.IpSubnetRepo;
 
@@ -20,41 +21,63 @@ public class BlickingListPopulatorServiceImpl implements BlockingListPopulatorSe
     final IpSubnetRepo ipSubnetRepo;
     final AttackAttemptRepo attemptRepo;
     @Override
-    @Transactional
+   @Transactional
     public AttackAttemptDto addAttackAttemptDot(AttackAttemptDto attackAttemptDto) {
-        Optional <IpSubnetEntity> duplicateIpSubnet =  ipSubnetRepo.findById(attackAttemptDto.subnet());
-        if(!duplicateIpSubnet.isPresent()) {
-            IpSubnetEntity newIpSubnetEntity = IpSubnetEntity.builder()
+        AttackAttemptDto result = null;
+        List <AttackAttemptEntity> entities = buildAllAttackAttemptEntity(attackAttemptDto);
+        log.debug("get list of entities: {}", entities);
+        Optional<IpSubnetEntity> duplicateIpSubnet = ipSubnetRepo.findById(attackAttemptDto.subnet());
+        if(duplicateIpSubnet.isEmpty()) {
+            result = attackAttemptDto;
+            for(AttackAttemptEntity entity: entities){
+                checkAndAddAllAttackAttempt(entity);
+
+            }
+            addBlockingIpSubnet(attackAttemptDto);
+
+        }
+            log.debug("subnet {} already exists", duplicateIpSubnet.get().getIpSubnet());
+        return result;
+    }
+//    add ip subnet to DB
+    @Transactional
+    protected void addBlockingIpSubnet(AttackAttemptDto attackAttemptDto) {
+       IpSubnetEntity newIpSubnetEntity = IpSubnetEntity.builder()
                     .ipSubnet(attackAttemptDto.subnet())
                     .build();
             ipSubnetRepo.save(newIpSubnetEntity);
-            log.debug("Added ip subnet: {}", newIpSubnetEntity);
-        }else{
-            log.debug("subnet {} already exists", duplicateIpSubnet.get().getIpSubnet());
-        }
-        // creat list of entities
-        List <AttackAttemptEntity> entities = buildAllAttackAttemptEntity(attackAttemptDto);
-        log.debug("get list of entities: {}", entities);
-        attemptRepo.saveAll(entities);
-        log.debug("added entities: {}", entities);
-        return attackAttemptDto;
+            log.debug("subnet {} added", newIpSubnetEntity.getIpSubnet());
+
     }
+//    check and add attack attempt entity to DB
+    @Transactional
+    protected void checkAndAddAllAttackAttempt(AttackAttemptEntity entity) {
+       Optional <AttackAttemptEntity> duplicateIpSubnet =
+               Optional.ofNullable(attemptRepo.findByIpSubnetAndServiceName(entity.getIpSubnet(), entity.getServiceName()));
+       if(duplicateIpSubnet.isEmpty()) {
+           attemptRepo.save(entity);
+           log.debug("Added attack attempt: {}", entity);
+       }else{
+           log.debug("attempt already exists: {}", duplicateIpSubnet.get());
+       }
+
+    }
+
+
     // Method that takes a DTO and creates a list of entities
     private List<AttackAttemptEntity> buildAllAttackAttemptEntity(AttackAttemptDto attackAttemptDto){
-        List<AttackAttemptEntity> entities = new ArrayList<>();
+
         IpSubnetEntity subnet = IpSubnetEntity
                 .builder()
                 .ipSubnet(attackAttemptDto.subnet())
                 .build();
 
-        entities = attackAttemptDto.services().stream().map(name ->
+        return attackAttemptDto.services().stream().map(name ->
             AttackAttemptEntity.builder()
                     .serviceName(name)
                     .timestamp(attackAttemptDto.timestamp())
                     .ipSubnet(subnet)
                     .build()
         ).collect(Collectors.toList());
-
-        return entities;
     }
 }
