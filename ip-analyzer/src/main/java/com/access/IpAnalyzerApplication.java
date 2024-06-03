@@ -1,6 +1,8 @@
 package com.access;
 
 import com.access.dto.AuthFailureDto;
+import com.access.model.FailureList;
+import com.access.repo.FailuresCounterRepo;
 import com.access.service.IpAnalyzerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +10,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Optional;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
 @SpringBootApplication(scanBasePackages = "com.access")
