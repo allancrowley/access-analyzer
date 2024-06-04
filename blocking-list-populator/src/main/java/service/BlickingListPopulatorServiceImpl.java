@@ -22,7 +22,7 @@ public class BlickingListPopulatorServiceImpl implements BlockingListPopulatorSe
     final AttackAttemptRepo attemptRepo;
     @Override
    @Transactional
-    public AttackAttemptDto addAttackAttemptDot(AttackAttemptDto attackAttemptDto) {
+    public AttackAttemptDto addAttackAttemptDto(AttackAttemptDto attackAttemptDto) {
         AttackAttemptDto result = null;
         List <AttackAttemptEntity> entities = buildAllAttackAttemptEntity(attackAttemptDto);
         log.debug("get list of entities: {}", entities);
@@ -58,11 +58,10 @@ public class BlickingListPopulatorServiceImpl implements BlockingListPopulatorSe
            attemptRepo.save(entity);
            log.debug("Added attack attempt: {}", entity);
        }else{
-           log.debug("attempt already exists: {}", duplicateIpSubnet.get());
+           log.warn("attempt already exists: {}", duplicateIpSubnet.get());
        }
 
     }
-
 
     // Method that takes a DTO and creates a list of entities
     private List<AttackAttemptEntity> buildAllAttackAttemptEntity(AttackAttemptDto attackAttemptDto){
