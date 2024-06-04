@@ -1,4 +1,4 @@
-package service;
+package com.access.service;
 
 import com.access.dto.AttackAttemptDto;
 import org.springframework.stereotype.Service;

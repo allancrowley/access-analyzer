@@ -1,7 +1,7 @@
-package repo;
+package com.access.repo;
 
-import model.AttackAttemptEntity;
-import model.IpSubnetEntity;
+import com.access.model.AttackAttemptEntity;
+import com.access.model.IpSubnetEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

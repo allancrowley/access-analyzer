@@ -1,4 +1,4 @@
-package model;
+package com.access.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ public class AttackAttemptEntity {
     private long id;
     @ManyToOne
     @JoinColumn(name = "ip_subnet", nullable = false)
-    private IpSubnetEntity  ipSubnet;
+    private IpSubnetEntity ipSubnet;
     @Column(name = "service_name", nullable = false)
     private String serviceName;
     @Column(nullable = false)

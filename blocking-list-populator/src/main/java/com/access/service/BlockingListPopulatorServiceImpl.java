@@ -1,23 +1,24 @@
-package service;
+package com.access.service;
 
 import com.access.dto.AttackAttemptDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import model.AttackAttemptEntity;
-import model.IpSubnetEntity;
+import com.access.model.AttackAttemptEntity;
+import com.access.model.IpSubnetEntity;
 import org.springframework.stereotype.Service;
 
-import repo.AttackAttemptRepo;
-import repo.IpSubnetRepo;
+import com.access.repo.AttackAttemptRepo;
+import com.access.repo.IpSubnetRepo;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
-public class BlickingListPopulatorServiceImpl implements BlockingListPopulatorService {
+@Slf4j
+
+public class BlockingListPopulatorServiceImpl implements BlockingListPopulatorService {
     final IpSubnetRepo ipSubnetRepo;
     final AttackAttemptRepo attemptRepo;
     @Override
