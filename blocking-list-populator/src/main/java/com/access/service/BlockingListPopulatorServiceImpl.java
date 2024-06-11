@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 
 public class BlockingListPopulatorServiceImpl implements BlockingListPopulatorService {
-    final IpSubnetRepo ipSubnetRepo;
+    final  IpSubnetRepo ipSubnetRepo;
     final AttackAttemptRepo attemptRepo;
     @Override
    @Transactional
@@ -80,4 +80,10 @@ public class BlockingListPopulatorServiceImpl implements BlockingListPopulatorSe
                     .build()
         ).collect(Collectors.toList());
     }
+//    static void test(){
+//        IpSubnetEntity test = IpSubnetEntity.builder()
+//                .ipSubnet("100.100.100")
+//                .build();
+//        ipSubnetRepo.save(test);
+//    }
 }
