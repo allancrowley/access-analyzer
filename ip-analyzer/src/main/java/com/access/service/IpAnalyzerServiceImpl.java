@@ -73,7 +73,7 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
         AttackAttemptDto attackAttemptDto = new AttackAttemptDto(subnet, recentAttempts.lastKey(), services);
         log.debug("New attack attempt data object created {}", attackAttemptDto);
         // Send the alert using StreamBridge
-        streamBridge.send(producerBindingName, attackAttemptDto);
+//        streamBridge.send(producerBindingName, attackAttemptDto);
         log.debug("Attack attempt data {} sent by {}", attackAttemptDto, producerBindingName);
     }
 }
