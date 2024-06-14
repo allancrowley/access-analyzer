@@ -3,7 +3,7 @@ package com.access.service;
 import com.access.dto.AttackAttemptDto;
 import com.access.dto.AuthFailureDto;
 import com.access.model.FailureList;
-import com.access.repo.FailuresCounterRepo;
+import com.access.repo.CacheDb;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,7 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
     private final StreamBridge streamBridge;
     @Value("${app.analyzer.producer.binding.name}")
     private String producerBindingName;
-    private final FailuresCounterRepo failuresCounterRepo;
+    private final CacheDb cacheDb;
     @Value("${app.analyzer.threshold}")
     private int threshold;
     @Value("${app.analyzer.time.period}")
@@ -31,7 +31,7 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
     @Override
     public void processAuthFailure(AuthFailureDto dto) {
         // Retrieve the FailureList for the given subnet
-        Optional<FailureList> optionalFailureList = failuresCounterRepo.findById(dto.subnet());
+        Optional<FailureList> optionalFailureList = cacheDb.findById(dto.subnet());
         FailureList failureList;
         if (optionalFailureList.isPresent()) {
             // If FailureList exists, process the authentication failure
@@ -39,7 +39,7 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
             attemptsMapProcessing(failureList, dto);
         } else {
             // If FailureList does not exist, create a new one and save it to the repository
-            failuresCounterRepo.save(new FailureList(dto.subnet(), new TreeMap<>(Map.of(dto.timestamp(), dto.webserviceName()))));
+            cacheDb.save(new FailureList(dto.subnet(), new TreeMap<>(Map.of(dto.timestamp(), dto.webserviceName()))));
         }
     }
 
@@ -51,12 +51,12 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
             // If the number of authentication attempts is below the threshold, add the new attempt
             attemptsMap.put(dto.timestamp(), dto.webserviceName());
             // Save the updated FailureList back to the repository
-            failuresCounterRepo.save(failureList);
+            cacheDb.save(failureList);
             log.debug("Failed authentication attempt for service {} from IP {} registered in cache at {}", dto.webserviceName(), dto.subnet(), dto.timestamp());
         } else {
-            if (failuresCounterRepo.existsById(dto.subnet())) {
+            if (cacheDb.existsById(dto.subnet())) {
                 // Delete the FailureList from the repository
-                failuresCounterRepo.deleteById(dto.subnet());
+                cacheDb.deleteById(dto.subnet());
                 log.debug("Failed authentication attempts from IP {} equal to {} and data is deleted from cache and sent to database", dto.subnet(), recentAttempts.size());
                 // If the number of authentication attempts exceeds the threshold, send an alert
                 sendAlert(recentAttempts, dto.subnet());
