@@ -1,7 +1,6 @@
 package com.access.repo;
 
 import com.access.model.FailureList;
-import com.access.repo.FailuresCounterRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
