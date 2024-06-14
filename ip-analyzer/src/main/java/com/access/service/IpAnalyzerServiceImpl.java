@@ -32,6 +32,7 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
     public void processAuthFailure(AuthFailureDto dto) {
         // Retrieve the FailureList for the given subnet
         Optional<FailureList> optionalFailureList = failuresCounterRepo.findById(dto.subnet());
+
         FailureList failureList;
         if (optionalFailureList.isPresent()) {
             // If FailureList exists, process the authentication failure

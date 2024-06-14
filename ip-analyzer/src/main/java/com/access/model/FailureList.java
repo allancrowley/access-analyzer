@@ -1,9 +1,7 @@
 package com.access.model;
 
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -11,7 +9,9 @@ import java.util.TreeMap;
 
 @RedisHash
 @RequiredArgsConstructor
-@Getter
+@Getter // delete
+@Builder // add builder
+@Data // add Data (getters, setters, equal, toString, hashCode)
 public class FailureList {
     @Id
     @NonNull
