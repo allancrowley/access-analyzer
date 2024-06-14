@@ -32,6 +32,7 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
     public void processAuthFailure(AuthFailureDto dto) {
         // Retrieve the FailureList for the given subnet
         Optional<FailureList> optionalFailureList = failuresCounterRepo.findById(dto.subnet());
+
         FailureList failureList;
         if (optionalFailureList.isPresent()) {
             // If FailureList exists, process the authentication failure
@@ -73,7 +74,7 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
         AttackAttemptDto attackAttemptDto = new AttackAttemptDto(subnet, recentAttempts.lastKey(), services);
         log.debug("New attack attempt data object created {}", attackAttemptDto);
         // Send the alert using StreamBridge
-//        streamBridge.send(producerBindingName, attackAttemptDto);
+        streamBridge.send(producerBindingName, attackAttemptDto);
         log.debug("Attack attempt data {} sent by {}", attackAttemptDto, producerBindingName);
     }
 }

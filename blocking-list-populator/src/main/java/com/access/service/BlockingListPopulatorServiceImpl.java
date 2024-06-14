@@ -1,6 +1,8 @@
 package com.access.service;
 
 import com.access.dto.AttackAttemptDto;
+import com.access.repo.AccessBD;
+import com.access.repo.AccessPostgreSQLDB;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,16 +21,15 @@ import java.util.stream.Collectors;
 @Slf4j
 
 public class BlockingListPopulatorServiceImpl implements BlockingListPopulatorService {
-    final  IpSubnetRepo ipSubnetRepo;
-    final AttackAttemptRepo attemptRepo;
+    final AccessBD accessBD;
     @Override
    @Transactional
     public AttackAttemptDto addAttackAttemptDto(AttackAttemptDto attackAttemptDto) {
         AttackAttemptDto result = null;
         List <AttackAttemptEntity> entities = buildAllAttackAttemptEntity(attackAttemptDto);
         log.debug("get list of entities: {}", entities);
-        Optional<IpSubnetEntity> duplicateIpSubnet = ipSubnetRepo.findById(attackAttemptDto.subnet());
-        if(duplicateIpSubnet.isEmpty()) {
+        IpSubnetEntity duplicateIpSubnet = accessBD.findByIpSubnet(attackAttemptDto.subnet());
+        if(duplicateIpSubnet == null) {
             result = attackAttemptDto;
             for(AttackAttemptEntity entity: entities){
                 checkAndAddAllAttackAttempt(entity);
@@ -37,7 +38,7 @@ public class BlockingListPopulatorServiceImpl implements BlockingListPopulatorSe
             addBlockingIpSubnet(attackAttemptDto);
 
         }
-            log.debug("subnet {} already exists", duplicateIpSubnet.get().getIpSubnet());
+            log.debug("subnet {} already exists", duplicateIpSubnet.getIpSubnet());
         return result;
     }
 //    add ip subnet to DB
@@ -46,7 +47,7 @@ public class BlockingListPopulatorServiceImpl implements BlockingListPopulatorSe
        IpSubnetEntity newIpSubnetEntity = IpSubnetEntity.builder()
                     .ipSubnet(attackAttemptDto.subnet())
                     .build();
-            ipSubnetRepo.save(newIpSubnetEntity);
+            accessBD.save(newIpSubnetEntity);
             log.debug("subnet {} added", newIpSubnetEntity.getIpSubnet());
 
     }
@@ -54,9 +55,9 @@ public class BlockingListPopulatorServiceImpl implements BlockingListPopulatorSe
     @Transactional
     protected void checkAndAddAllAttackAttempt(AttackAttemptEntity entity) {
        Optional <AttackAttemptEntity> duplicateIpSubnet =
-               Optional.ofNullable(attemptRepo.findByIpSubnetAndServiceName(entity.getIpSubnet(), entity.getServiceName()));
+               Optional.ofNullable(accessBD.findByIpSubnetAndServiceName(entity.getIpSubnet(), entity.getServiceName()));
        if(duplicateIpSubnet.isEmpty()) {
-           attemptRepo.save(entity);
+           accessBD.save(entity);
            log.debug("Added attack attempt: {}", entity);
        }else{
            log.warn("attempt already exists: {}", duplicateIpSubnet.get());
@@ -80,10 +81,5 @@ public class BlockingListPopulatorServiceImpl implements BlockingListPopulatorSe
                     .build()
         ).collect(Collectors.toList());
     }
-//    static void test(){
-//        IpSubnetEntity test = IpSubnetEntity.builder()
-//                .ipSubnet("100.100.100")
-//                .build();
-//        ipSubnetRepo.save(test);
-//    }
+
 }

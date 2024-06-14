@@ -36,7 +36,6 @@ public class IpAnalyzerServiceTest {
     }
 
     @Test
-    @Order(1)
     @DisplayName("Test Failure find by id fail then add current failure to repo ")
     void givenAuthFailureDto_whenFindByIdNotExists_thenAddNewFailureToRepo() {
         //given
@@ -47,7 +46,6 @@ public class IpAnalyzerServiceTest {
         assertTrue(failuresCounterRepo.existsById(authFailureDto.subnet()));
     }
     @Test
-    @Order(2)
     @DisplayName("Test Failure find by id exists and added correct to repo")
     void givenAuthFailureDto_whenFindByIdSuccess_thenAttackAttemptAddedCorrectToRepo() {
         //given
@@ -68,7 +66,6 @@ public class IpAnalyzerServiceTest {
 
     }
     @Test
-    @Order(3)
     @DisplayName("Test amount of attempt more then threshold value then FailureList delete frome repo and alert send")
     void givenAuthFailureDto_whenAmountOfAttemptMoreThenThresholdValue_thenDeleteFromRepoAndAlertSend() {
         // Given
@@ -81,12 +78,12 @@ public class IpAnalyzerServiceTest {
 //            ipAnalyzerService.processAuthFailure(DataUtils.getOverflowingAuthFailureDto());
 //        });
         int counter;
-        for(int i = 0; i < 60; i++){
-            try {
-                Thread.sleep(1);
+        for(int i = 0; i < 10000; i++){
+           /* try {
+                Thread.sleep(0);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
+            }*/
 
             ipAnalyzerService.processAuthFailure(DataUtils.getOverflowingAuthFailureDto());
 
