@@ -40,11 +40,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-stream-binder-kafka</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
@@ -65,6 +60,11 @@
             <artifactId>spring-cloud-stream-test-binder</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.access</groupId>
+            <artifactId>access-analyzer-api</artifactId>
+            <version>0.0.1</version>
+        </dependency>
 
         <dependency>
             <groupId>com.access</groupId>
@@ -82,7 +82,10 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
+            <dependency>
+                <groupId>org.springframework.kafka</groupId>
+                <artifactId>spring-kafka</artifactId>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -91,15 +94,25 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
+            </plugin>
+           <!-- <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
                 <configuration>
-                    <excludes>
-                        <exclude>
+                    <source>22</source>
+                    <target>22</target>
+                    <annotationProcessorPaths>
+                        <dependency>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+                            <version>1.18.32</version>
+                        </dependency>
+                    </annotationProcessorPaths>
                 </configuration>
-            </plugin>
+            </plugin>-->
+
         </plugins>
     </build>
 
@@ -113,5 +126,5 @@
         <module>ip-analyzer</module>
         <module>ip-filter</module>
     </modules>
-    
+
 </project>
