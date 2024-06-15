@@ -31,6 +31,7 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
     @Override
     public void processAuthFailure(AuthFailureDto dto) {
         // Retrieve the FailureList for the given subnet
+
         Optional<FailureList> optionalFailureList = cacheDb.findById(dto.subnet());
         FailureList failureList;
         if (optionalFailureList.isPresent()) {
