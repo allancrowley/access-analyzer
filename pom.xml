@@ -46,11 +46,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -70,6 +65,11 @@
             <groupId>com.access</groupId>
             <artifactId>access-analyzer-api</artifactId>
             <version>0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>annotationProcessor</scope>
         </dependency>
 
     </dependencies>
@@ -96,7 +96,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
 
             </plugin>
-           <!-- <plugin>
+           <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
@@ -111,7 +111,7 @@
                         </dependency>
                     </annotationProcessorPaths>
                 </configuration>
-            </plugin>-->
+            </plugin>
 
         </plugins>
     </build>
