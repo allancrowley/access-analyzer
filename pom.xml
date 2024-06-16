@@ -120,6 +120,7 @@
         <module>group-notifier</module>
         <module>ip-analyzer</module>
         <module>ip-filter</module>
+        <module>auth-failure-generator</module>
     </modules>
 
 </project>
