@@ -134,6 +134,7 @@
         <module>ip-analyzer</module>
         <module>ip-filter</module>
         <module>auth-failure-generator</module>
+        <module>auth-failure-broker-populator</module>
     </modules>
 
 </project>
