@@ -1,6 +1,5 @@
 package com.access;
 
-import com.access.dto.AuthFailureDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +25,7 @@ public class AuthFailureBrokerPopulatorApplication {
 	}
 
 	@PostMapping(AUTH_FAILURE_ROUTING_PATH)
-	public void routeAuthFailureDto(@RequestBody AuthFailureDto authFailureDto) {
+	public void routeAuthFailureDto(@RequestBody String authFailureDto) {
 		log.trace("AuthFailureBrokerPopulatorController: routeAuthFailureDto: received {}", authFailureDto);
 		streamBridge.send(producerBindingName, authFailureDto);
 		log.debug("AuthFailureBrokerPopulatorController: routeAuthFailureDto: routed to message broker {} with binding name {}",
