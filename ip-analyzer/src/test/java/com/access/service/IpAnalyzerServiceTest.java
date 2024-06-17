@@ -18,13 +18,13 @@ import org.springframework.cloud.stream.binder.test.TestChannelBinderConfigurati
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @Primary
@@ -83,13 +83,16 @@ public class IpAnalyzerServiceTest extends AbstractCacheContainerTest {
         }
         var cacheFull =  cacheDb.findById("100.100.100").orElse(null);
         //when
-        ipAnalyzerService.processAuthFailure(DataUtils.getFullMapAuthFailureDto());
+        var returnedValue = ipAnalyzerService.processAuthFailure(DataUtils.getFullMapAuthFailureDto());
         var cacheEmpty = cacheDb.findById("100.100.100").orElse(null);
         //then
         //checking size of the map before delete
         assertEquals(cacheFull.getAttemptsMap().size(), 9);
         //checking that the map is empty after processAuthFailure
         assertThat(cacheEmpty).isNull();
+        assertThat(returnedValue).isNotNull();
+
+
 
     }
 }

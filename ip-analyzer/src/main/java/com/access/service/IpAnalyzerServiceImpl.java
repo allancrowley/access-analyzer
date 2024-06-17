@@ -29,7 +29,7 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
     private long timePeriod;
 
     @Override
-    public void processAuthFailure(AuthFailureDto dto) {
+    public  AttackAttemptDto processAuthFailure(AuthFailureDto dto) {
         // Retrieve the FailureList for the given subnet
         Optional<FailureList> optionalFailureList = cacheDb.findById(dto.subnet());
         FailureList failureList;
@@ -41,6 +41,7 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
             // If FailureList does not exist, create a new one and save it to the repository
             cacheDb.save(new FailureList(dto.subnet(), new TreeMap<>(Map.of(dto.timestamp(), dto.webserviceName()))));
         }
+        return null;
     }
 
     private void attemptsMapProcessing(FailureList failureList, AuthFailureDto dto) {
