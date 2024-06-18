@@ -6,6 +6,7 @@ import lombok.*;
 @Entity
 @Getter
 @Table(name = "services")
+@AllArgsConstructor
 @NoArgsConstructor
 public class EmailEntity {
     @Id
