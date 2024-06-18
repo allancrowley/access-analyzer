@@ -1,7 +1,6 @@
-package com.access.emailprovider.service;
+package com.access.service;
 
-import com.access.emailprovider.util.DataUtils;
-import com.access.repo.AccessDb;
+import com.access.util.DataUtils;
 import com.access.repo.AccessSQLImpl;
 import com.access.repo.ServiceRepo;
 import org.junit.jupiter.api.DisplayName;
@@ -10,9 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
@@ -21,7 +18,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyList;
 
-//@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class EmailProviderServiceAccessSQLImplTests {
     @Mock

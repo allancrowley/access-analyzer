@@ -1,4 +1,4 @@
-package com.access.emailprovider.util;
+package com.access.util;
 
 import com.access.model.EmailEntity;
 

@@ -1,9 +1,8 @@
-package com.access.emailprovider.repository;
+package com.access.repository;
 
-import com.access.emailprovider.util.DataUtils;
+import com.access.util.DataUtils;
 import com.access.model.EmailEntity;
 import com.access.repo.AccessDb;
-import jakarta.validation.constraints.AssertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
