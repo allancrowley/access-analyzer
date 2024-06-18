@@ -11,13 +11,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import org.springframework.context.annotation.Bean;
 import com.access.service.BlockingListPopulatorService;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 
-@SpringBootApplication(scanBasePackages = "com.access")
+//@SpringBootApplication(scanBasePackages = "com.access")
+@SpringBootApplication
 @RequiredArgsConstructor
 @Slf4j
 
@@ -35,6 +37,7 @@ public class BlockingListPopulatorApplication {
         return this::BlockingIpDtoPopulation;
     }
 
+    //FIXME method naming
     private void BlockingIpDtoPopulation(AttackAttemptDto attackAttemptDto){
         log.debug("received attackAttemptDto: {}", attackAttemptDto);
         blockingListPopulatorService.addAttackAttemptDto(attackAttemptDto);
