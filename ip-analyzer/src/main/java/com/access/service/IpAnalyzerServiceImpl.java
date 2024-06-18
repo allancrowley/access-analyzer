@@ -25,9 +25,11 @@ public class IpAnalyzerServiceImpl implements IpAnalyzerService {
     @Value("${app.analyzer.time.period}")
     private long timePeriod;
 
-    @Override
+   
+
     public AttackAttemptDto processAuthFailure(AuthFailureDto dto) {
         // Retrieve the FailureList for the given subnet
+
 
         Optional<FailureList> optionalFailureList = cacheDb.findById(dto.subnet());
         FailureList failureList;
