@@ -1,7 +1,9 @@
 package com.access.emailprovider.repository;
 
+import com.access.emailprovider.util.DataUtils;
 import com.access.model.EmailEntity;
 import com.access.repo.AccessDb;
+import jakarta.validation.constraints.AssertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -31,19 +34,16 @@ public class EmailProviderRepositoryTest {
     @DisplayName("Test find emails functionality")
     public void givenServiceNames_whenFindEmails_thenEmailsAreReturned() {
         //given
-        List<EmailEntity> emailEnteties = Arrays.asList(
-                new EmailEntity("Service1", "service1@example.com"),
-                new EmailEntity("Service2", "service2@example.com"),
-                new EmailEntity("Service3", "service3@example.com"),
-                new EmailEntity("Service4", "service4@example.com"),
-                new EmailEntity("Service5", "service5@example.com")
-        );
-        accessDb.saveAll(emailEnteties);
-        List<String> serviceNames = Arrays.asList("Service1", "Service2", "Service3", "Service4", "Service5");
-        List<String> expectedEmails = Arrays.asList("service1@example.com", "service2@example.com", "service3@example.com", "service4@example.com", "service5@example.com");
-        //when
+        List<String> serviceNames = DataUtils.getServiceNamesList();
+        List<String> expectedEmails = DataUtils.getEmailsList();
         List<String> emails = accessDb.findEmailsByServiceNames(serviceNames);
+        assertTrue(emails.isEmpty());
+        List<EmailEntity> emailEnteties = DataUtils.getEmailEntitiesList();
+        accessDb.saveAll(emailEnteties);
+        //when
+        emails = accessDb.findEmailsByServiceNames(serviceNames);
         //then
+        assertThat(emails).isNotNull();
         assertEquals(expectedEmails, emails);
     }
 }
