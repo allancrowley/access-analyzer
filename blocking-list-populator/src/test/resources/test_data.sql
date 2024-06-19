@@ -13,4 +13,4 @@ insert into services (service_name, email) values
                                                   ('service2', 'email2@mail.com'),
                                                   ('service3', 'email3@mail.com');
 insert into attack_attempts (id, ip_subnet, service_name, timestamp) values
-                                                                         (1, '100.100.100', 'service1', 1);
+                                                                         (10, '100.100.100', 'service1', 1);

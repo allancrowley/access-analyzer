@@ -7,7 +7,6 @@ import com.access.repo.AccessBD;
 import com.access.util.DataUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.stream.binder.test.InputDestination;
@@ -16,10 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Import(TestChannelBinderConfiguration.class)
 @Testcontainers
@@ -30,11 +26,11 @@ public class ItBlockingListPopulatorApplicationTests extends AbstractBlockingLis
     @Autowired
     InputDestination producer;
 
-    @Spy
+    @Autowired
     AccessBD accessBD;
 
     //FIXME
-    String bindingName = "blockingListPopulatorConsumer-in-0";
+    String bindingName = "attack-attempt";
 
     @Test
     @DisplayName("Test consume attack attempt with ip subnet already in DB functionality")
@@ -42,11 +38,12 @@ public class ItBlockingListPopulatorApplicationTests extends AbstractBlockingLis
         //given
         AttackAttemptDto attemptToSave = DataUtils.getAttackAttemptDtoAlreadyAdded();
         //when
-        producer.send(new GenericMessage<AttackAttemptDto>(attemptToSave), bindingName);
+        producer.send(new GenericMessage<>(attemptToSave), bindingName);
         Thread.sleep(100);
         //then
-        verify(accessBD, times(0)).save(any(IpSubnetEntity.class));
-        verify(accessBD, times(0)).save(any(AttackAttemptEntity.class));
+        AttackAttemptEntity obtainedAttackAttempt = accessBD
+                .findByIpSubnetAndServiceName(DataUtils.getIpSubnetExists(), attemptToSave.services().get(0));
+        assertThat(obtainedAttackAttempt).isNull();
     }
 
     @Test
@@ -54,11 +51,14 @@ public class ItBlockingListPopulatorApplicationTests extends AbstractBlockingLis
     public void givenAttackAttemptWithSameServices_whenAddAttackAttempt_thenOneServiceAdded() {
         //given
         AttackAttemptDto attemptToSave = DataUtils.getAttackAttemptDtoSameServices();
+        long attemptsCount = accessBD.getAttackAttemptsCount();
         //when
-        producer.send(new GenericMessage<AttackAttemptDto>(attemptToSave), bindingName);
+        producer.send(new GenericMessage<>(attemptToSave), bindingName);
         //then
-        verify(accessBD, times(1)).save(any(IpSubnetEntity.class));
-        verify(accessBD, times(1)).save(any(AttackAttemptEntity.class));
+        IpSubnetEntity obtainedIpSubnet = accessBD.findByIpSubnet(attemptToSave.subnet());
+        long attemptNewCount = accessBD.getAttackAttemptsCount();
+        assertThat(obtainedIpSubnet).isNotNull();
+        assertThat(attemptNewCount).isEqualTo(attemptsCount + 1);
     }
 
     @Test
@@ -66,10 +66,13 @@ public class ItBlockingListPopulatorApplicationTests extends AbstractBlockingLis
     public void givenAttackAttemptWithDifferentServices_whenAddAttackAttempt_thenAllServicesAdded() {
         //given
         AttackAttemptDto attemptToSave = DataUtils.getAttackAttemptDtoDifferentServices();
+        long attemptsCount = accessBD.getAttackAttemptsCount();
         //when
-        producer.send(new GenericMessage<AttackAttemptDto>(attemptToSave), bindingName);
+        producer.send(new GenericMessage<>(attemptToSave), bindingName);
         //then
-        verify(accessBD, times(1)).save(any(IpSubnetEntity.class));
-        verify(accessBD, times(attemptToSave.services().size())).save(any(AttackAttemptEntity.class));
+        IpSubnetEntity obtainedIpSubnet = accessBD.findByIpSubnet(attemptToSave.subnet());
+        long attemptNewCount = accessBD.getAttackAttemptsCount();
+        assertThat(obtainedIpSubnet).isNotNull();
+        assertThat(attemptNewCount).isEqualTo(attemptsCount + attemptToSave.services().size());
     }
 }
