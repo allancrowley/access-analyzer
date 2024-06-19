@@ -1,16 +1,13 @@
 package com.access.it;
 
-import com.access.dto.AttackAttemptDto;
-import com.access.model.AttackAttemptEntity;
-import com.access.model.IpSubnetEntity;
+import com.access.dto.*;
+import com.access.model.*;
 import com.access.repo.AccessBD;
 import com.access.util.DataUtils;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.stream.binder.test.InputDestination;
-import org.springframework.cloud.stream.binder.test.TestChannelBinderConfiguration;
+import org.springframework.cloud.stream.binder.test.*;
 import org.springframework.context.annotation.Import;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.test.context.jdbc.Sql;
