@@ -24,7 +24,7 @@ public class BlockingListPopulatorControllerTests {
 
 
     //FIXME
-    String bindingName = "blockingListPopulatorConsumer-in-0";
+    String bindingName = "attack-attempt";
 
     @Test
     @DisplayName("Test consuming attack attempts from message broker functionality")
