@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class BlockingListPopulatorServiceImpl implements BlockingListPopulatorService {
     final AccessBD accessBD;
     @Override
-//   @Transactional
+
     public AttackAttemptDto addAttackAttemptDto(AttackAttemptDto attackAttemptDto) {
         AttackAttemptDto result = null;
         List <AttackAttemptEntity> entities = buildAllAttackAttemptEntity(attackAttemptDto);
@@ -41,7 +41,7 @@ public class BlockingListPopulatorServiceImpl implements BlockingListPopulatorSe
         return result;
     }
 //    add ip subnet to DB
-//    @Transactional
+
     protected void addBlockingIpSubnet(AttackAttemptDto attackAttemptDto) {
        IpSubnetEntity newIpSubnetEntity = IpSubnetEntity.builder()
                     .ipSubnet(attackAttemptDto.subnet())
@@ -51,7 +51,7 @@ public class BlockingListPopulatorServiceImpl implements BlockingListPopulatorSe
 
     }
 //    check and add attack attempt entity to DB
-//    @Transactional
+
     protected void checkAndAddAllAttackAttempt(AttackAttemptEntity entity) {
        Optional <AttackAttemptEntity> duplicateIpSubnet =
                Optional.ofNullable(accessBD.findByIpSubnetAndServiceName(entity.getIpSubnet(), entity.getServiceName()));

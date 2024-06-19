@@ -25,7 +25,7 @@ public class DataUtils {
 
     public static AttackAttemptEntity getAttackAttemptPersisted() {
         return AttackAttemptEntity.builder()
-                .id(1)
+                .id(10)
                 .ipSubnet(getIpSubnetExists())
                 .serviceName("service1")
                 .timestamp(1)
