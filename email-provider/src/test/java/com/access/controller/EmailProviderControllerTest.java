@@ -17,7 +17,6 @@ import static com.access.UrlConstants.EMAIL_PATH;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.util.List;
-
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
