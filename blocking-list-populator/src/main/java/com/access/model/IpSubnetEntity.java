@@ -18,6 +18,6 @@ import java.util.*;
 public class IpSubnetEntity {
     @Id
     private String ipSubnet;
-    @OneToMany(mappedBy = "ipSubnet")
+    @OneToMany(mappedBy = "ipSubnet", cascade = CascadeType.ALL)
     private Set<AttackAttemptEntity> attackAttemptEntitySet;
 }
