@@ -8,18 +8,20 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @Data
-public class configuration {
-    @Value("10")
+public class GeneratorConfig {
+    @Value("${app.generator.min.ip.number}")
     int minIpNumber;
 
-    @Value("20")
+    @Value("${app.generator.max.ip.number}")
     int maxIpNumber;
 
-    @Value("5")
+    @Value("${app.generator.max.service.name.range}")
     int maxServiceNameRange;
 
-    @Value("${target.url}")
+    @Value("${app.generator.target.url}")
     String targetUrl;
+
+
 
     @Bean
     public RestTemplate restTemplate() {

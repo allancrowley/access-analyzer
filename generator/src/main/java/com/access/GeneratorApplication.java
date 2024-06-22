@@ -2,52 +2,47 @@ package com.access;
 
 
 
-import com.access.controller.SimulationController;
+
+import com.access.service.GeneratorService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.function.Supplier;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+
 
 @SpringBootApplication
-@RestController
 @Slf4j
+@RequiredArgsConstructor
+@EnableScheduling
 public class GeneratorApplication {
-    private final SimulationController simulationController;
-    @Value("30")
+    private final GeneratorService generatorService;
+    @Value("${app.generator.poll.count}")
     private int pollCount;
-    @Value("100")
-    private int delay;
     private volatile static int curCount = 0;
 
-    public GeneratorApplication(SimulationController simulationController) {
-        this.simulationController = simulationController;
-    }
+
 
     public static void main(String[] args) throws InterruptedException {
-        var ctx = SpringApplication.run(GeneratorApplication.class, args);
-        var generator = ctx.getBean(GeneratorApplication.class);
+        SpringApplication.run(GeneratorApplication.class, args);
 
-       synchronized (generator){
-           while(generator.pollCount == 0 || curCount < generator.pollCount){
-               generator.wait(generator.delay / 10);
-           }
-       }
     }
 
-
-    @Bean
-    Supplier<ResponseEntity<String>> responseSupplier() {
-        return () -> buildResponse();
+    @Scheduled(fixedDelayString = "${app.generator.delay}")
+    public void poll() {
+        if (curCount < pollCount || pollCount == -1) {
+            buildResponse();
+        }else {
+            System.exit(0);
+        }
     }
-
 
     private ResponseEntity<String> buildResponse() {
         curCount++;
-        ResponseEntity<String> response = simulationController.runSimulation();
+        ResponseEntity<String> response = generatorService.getResponse();
         log.warn("{} sent ", response.getStatusCode());
         return response;
     }
