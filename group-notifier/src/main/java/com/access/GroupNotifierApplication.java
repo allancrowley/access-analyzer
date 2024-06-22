@@ -1,6 +1,7 @@
 package com.access;
 
 import com.access.dto.AttackAttemptDto;
+import com.access.dto.ServiceDto;
 import com.access.service.GroupNotifierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,5 +58,13 @@ public class GroupNotifierApplication {
         String text = String.format("Service %s attack attempt at %d from ip %s", serviceName,
                 timestamp, subnet);
         return text;
+    }
+    @Bean
+    Consumer<ServiceDto> updateEmailsConsumer() {
+        return this::updateProcessing;
+    }
+
+    private void updateProcessing(ServiceDto serviceDto) {
+        groupNotifierService.updateCache(serviceDto);
     }
 }
