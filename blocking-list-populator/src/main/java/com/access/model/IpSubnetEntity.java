@@ -1,15 +1,13 @@
 package com.access.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+
+import java.util.*;
 
 @Entity
 @Table(name = "ip_addresses")
@@ -20,6 +18,6 @@ import java.util.Set;
 public class IpSubnetEntity {
     @Id
     private String ipSubnet;
-    @OneToMany(mappedBy = "ipSubnet")
+    @OneToMany(mappedBy = "ipSubnet", cascade = CascadeType.ALL)
     private Set<AttackAttemptEntity> attackAttemptEntitySet;
 }

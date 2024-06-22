@@ -23,26 +23,25 @@ import java.util.stream.Collectors;
 public class BlockingListPopulatorServiceImpl implements BlockingListPopulatorService {
     final AccessBD accessBD;
     @Override
-   @Transactional
+
     public AttackAttemptDto addAttackAttemptDto(AttackAttemptDto attackAttemptDto) {
         AttackAttemptDto result = null;
         List <AttackAttemptEntity> entities = buildAllAttackAttemptEntity(attackAttemptDto);
         log.debug("get list of entities: {}", entities);
         IpSubnetEntity duplicateIpSubnet = accessBD.findByIpSubnet(attackAttemptDto.subnet());
-        if(duplicateIpSubnet == null) {
+        if (duplicateIpSubnet == null) {
             result = attackAttemptDto;
-            for(AttackAttemptEntity entity: entities){
-                checkAndAddAllAttackAttempt(entity);
-
-            }
             addBlockingIpSubnet(attackAttemptDto);
-
-        }
+            for(AttackAttemptEntity entity: entities) {
+                checkAndAddAllAttackAttempt(entity);
+            }
+        } else {
             log.debug("subnet {} already exists", duplicateIpSubnet.getIpSubnet());
+        }
         return result;
     }
 //    add ip subnet to DB
-    @Transactional
+
     protected void addBlockingIpSubnet(AttackAttemptDto attackAttemptDto) {
        IpSubnetEntity newIpSubnetEntity = IpSubnetEntity.builder()
                     .ipSubnet(attackAttemptDto.subnet())
@@ -52,11 +51,12 @@ public class BlockingListPopulatorServiceImpl implements BlockingListPopulatorSe
 
     }
 //    check and add attack attempt entity to DB
-    @Transactional
+
     protected void checkAndAddAllAttackAttempt(AttackAttemptEntity entity) {
        Optional <AttackAttemptEntity> duplicateIpSubnet =
                Optional.ofNullable(accessBD.findByIpSubnetAndServiceName(entity.getIpSubnet(), entity.getServiceName()));
        if(duplicateIpSubnet.isEmpty()) {
+
            accessBD.save(entity);
            log.debug("Added attack attempt: {}", entity);
        }else{

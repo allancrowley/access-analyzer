@@ -16,11 +16,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Primary;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.IOException;
 import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest
@@ -88,8 +87,18 @@ public class IpAnalyzerServiceTest extends AbstractCacheContainerTest {
         //checking that the map is empty after processAuthFailure
         assertThat(cacheEmpty).isNull();
         assertThat(returnedValue).isNotNull();
+    }
 
-
-
+    @Test
+    @DisplayName("Test timeout more than time period then no FailureList added to repo and no AttackAttemptDto returned")
+    void givenAuthFailureDto_whenTimeoutMoreThenPeriodTime_thenNoFailureListAddedToRepoAndNoAttackAttemptDtoReturned() throws IOException, InterruptedException {
+        for(int i = 0; i < 9; i++){
+            ipAnalyzerService.processAuthFailure(DataUtils.getFullMapAuthFailureDto());
+        }
+        AuthFailureDto dto = DataUtils.getFullMapAuthFailureDto();
+        Thread.sleep(10000);
+        var returnedData = ipAnalyzerService.processAuthFailure(dto);
+        assertNull(returnedData);
+        assertThat(failuresCounterRepo.findById(dto.subnet())).isNotEmpty();
     }
 }
