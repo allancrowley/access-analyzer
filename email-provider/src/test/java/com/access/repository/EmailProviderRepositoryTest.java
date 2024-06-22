@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @ComponentScan("com.access.repo")
 @TestPropertySource(properties = {"spring.cloud.config.enabled=false"})
-public class EmailProviderRepositoryTest_H2 {
+public class EmailProviderRepositoryTest {
     @Autowired
     private AccessDb accessDb;
 
@@ -34,8 +34,8 @@ public class EmailProviderRepositoryTest_H2 {
         List<String> expectedEmails = DataUtils.getEmailsList();
         List<String> emails = accessDb.findEmailsByServiceNames(serviceNames);
         assertTrue(emails.isEmpty());
-        List<EmailEntity> emailEnteties = DataUtils.getEmailEntitiesList();
-        accessDb.saveAll(emailEnteties);
+        List<EmailEntity> emailEntities = DataUtils.getEmailEntitiesList();
+        accessDb.saveAll(emailEntities);
         //when
         emails = accessDb.findEmailsByServiceNames(serviceNames);
         //then
