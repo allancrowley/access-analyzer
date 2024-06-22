@@ -5,6 +5,8 @@ import com.access.model.IpSubnetEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class AccessPostgreSQLDB implements AccessBD{
@@ -13,6 +15,12 @@ public class AccessPostgreSQLDB implements AccessBD{
     @Override
     public AttackAttemptEntity findByIpSubnetAndServiceName(IpSubnetEntity ipSubnet, String serviceName) {
         return attemptRepo.findByIpSubnetAndServiceName(ipSubnet, serviceName);
+    }
+
+
+    @Override
+    public long getAttackAttemptsCount() {
+        return attemptRepo.count();
     }
 
     @Override
