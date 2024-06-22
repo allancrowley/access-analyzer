@@ -1,4 +1,4 @@
-package util;
+package com.access.util;
 
 import com.access.model.IpSubnetEntity;
 
