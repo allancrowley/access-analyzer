@@ -61,12 +61,7 @@ public class GroupNotifierServiceImpl implements GroupNotifierService {
         return url;
     }
 
-    @Bean
-    Consumer<ServiceDto> updateEmailsConsumer() {
-        return this::updateProcessing;
-    }
-
-    void updateProcessing(ServiceDto serviceDto) {
+    public void updateCache(ServiceDto serviceDto) {
         String serviceName = serviceDto.webserviceName();
         String email = serviceDto.email();
         if (cache.containsKey(serviceName) && email != null) {
