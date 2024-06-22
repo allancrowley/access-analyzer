@@ -1,9 +1,11 @@
 package com.access.service;
 
 import com.access.dto.AttackAttemptDto;
+import com.access.dto.ServiceDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +23,6 @@ import java.util.List;
 public class GroupNotifierServiceImpl implements GroupNotifierService {
     final RestTemplate restTemplate;
     final ServiceConfiguration serviceConfiguration;
-    @Value("${app.emails.provider.default}")
-    String defaultEmail;
     HashMap<String, String> cache = new HashMap<>();
 
     @Override
@@ -58,5 +59,18 @@ public class GroupNotifierServiceImpl implements GroupNotifierService {
                 serviceConfiguration.getPath());
         log.debug("url created is {}", url);
         return url;
+    }
+
+    @Bean
+    Consumer<ServiceDto> updateEmailsConsumer() {
+        return this::updateProcessing;
+    }
+
+    void updateProcessing(ServiceDto serviceDto) {
+        String serviceName = serviceDto.webserviceName();
+        String email = serviceDto.email();
+        if (cache.containsKey(serviceName) && email != null) {
+            cache.put(serviceName, email);
+        }
     }
 }
