@@ -1,8 +1,7 @@
-package com.access.repository;
+package com.access.repo;
 
 import com.access.util.DataUtils;
 import com.access.model.EmailEntity;
-import com.access.repo.AccessDb;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ComponentScan("com.access.repo")
-@TestPropertySource(properties = {"spring.cloud.config.enabled=false"})
 public class EmailProviderRepositoryTest {
     @Autowired
     private AccessDb accessDb;

@@ -7,6 +7,7 @@ import lombok.*;
 @Getter
 @Table(name = "ip_addresses")
 @NoArgsConstructor
+@AllArgsConstructor
 public class IpSubnetEntity {
     @Id
     private String ipSubnet;
