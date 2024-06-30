@@ -14,6 +14,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 @Slf4j
@@ -35,7 +36,9 @@ public class GroupNotifierApplication {
 
     private void sendingMail(AttackAttemptDto attackAttemptDto) {
         log.debug("received attack attempt data {}", attackAttemptDto);
-        List<String> services = attackAttemptDto.services();
+        List<String> services = attackAttemptDto.services().stream()
+                .distinct()
+                .collect(Collectors.toList());
         List<String> emails = groupNotifierService.getMails(services);
         log.debug("received mail addresses are: {}", String.join(", ", emails));
         for (int i = 0; i < emails.size(); i++) {
@@ -59,6 +62,7 @@ public class GroupNotifierApplication {
                 timestamp, subnet);
         return text;
     }
+
     @Bean
     Consumer<ServiceDto> updateEmailsConsumer() {
         return this::updateProcessing;
