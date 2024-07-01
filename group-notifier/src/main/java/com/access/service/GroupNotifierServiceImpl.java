@@ -28,34 +28,54 @@ public class GroupNotifierServiceImpl implements GroupNotifierService {
     @Override
     public List<String> getMails(List<String> services) {
         List<String> emails = new ArrayList<>();
+        List<String> servicesNotInCache = new ArrayList<>();
         String res;
         for (int i = 0; i < services.size(); i++) {
             res = cache.get(services.get(i));
             if (res == null) {
                 log.debug("email for service {} doesn't exist in cache", services.get(i));
-                res = emailRequest(services.get(i));
-                emails.add(res);
+                servicesNotInCache.add(services.get(i));
             } else {
                 log.debug("email from cache: {}", res);
                 emails.add(res);
             }
         }
+        if (servicesNotInCache.size() > 0) {
+            List<String> emailsNotInCache = emailRequest(servicesNotInCache);
+            emails.addAll(emailsNotInCache);
+        }
         return emails;
     }
 
-    private String emailRequest(String serviceName) {
-        ResponseEntity<?> responseEntity;
-        String url = getUrl() + "?" + serviceName; // Append serviceName as a query parameter
-        responseEntity = restTemplate.exchange(url, HttpMethod.GET, null, String[].class);
-        String[] emailArray = (String[]) responseEntity.getBody();
+    private List<String> emailRequest(List<String> services) {
+        String url = getUrlWithServices(services);
+        ResponseEntity<String[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null, String[].class);
+        String[] emailArray = responseEntity.getBody();
         List<String> emailList = Arrays.asList(emailArray);
-        log.debug("email: {}", emailList.get(0));
-        cache.put(serviceName, emailList.get(0));
-        return emailList.get(0);
+
+        for (int i = 0; i < services.size(); i++) {
+            String serviceName = services.get(i);
+            if (i < emailList.size()) {
+                String email = emailList.get(i);
+                cache.put(serviceName, email);
+                log.debug("Cached email for service {}: {}", serviceName, email);
+            } else {
+                log.warn("No email found in response for service {}", serviceName);
+            }
+        }
+
+        return emailList;
+    }
+
+    private String getUrlWithServices(List<String> services) {
+        StringBuilder sb = new StringBuilder(getUrl());
+        sb.append("?services=");
+        sb.append(String.join("&services=", services));
+        return sb.toString();
     }
 
     private String getUrl() {
-        String url = String.format("http://%s:%d%s/%d", serviceConfiguration.getHost(), serviceConfiguration.getPort(),
+        String url = String.format("http://%s:%d/%s", serviceConfiguration.getHost(), serviceConfiguration.getPort(),
                 serviceConfiguration.getPath());
         log.debug("url created is {}", url);
         return url;
