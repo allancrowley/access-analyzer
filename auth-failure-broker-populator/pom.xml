@@ -6,10 +6,9 @@
 		<groupId>com.access</groupId>
 		<artifactId>access-analyzer</artifactId>
 		<version>0.0.1</version>
-		<relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
 	</parent>
 	<artifactId>auth-failure-broker-populator</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>auth-failure-broker-populator</name>
 	<description>auth-failure-broker-populator</description>
 	<properties>

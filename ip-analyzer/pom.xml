@@ -6,11 +6,9 @@
         <groupId>com.access</groupId>
         <artifactId>access-analyzer</artifactId>
         <version>0.0.1</version>
-        <relativePath>../pom.xml</relativePath> <!-- Adjust the relative path as needed -->
     </parent>
-    <groupId>com.access</groupId>
     <artifactId>ip-analyzer</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>ip-analyzer</name>
     <description>ip-analyzer</description>
     <properties>
