@@ -1,6 +1,7 @@
 package com.access;
 
 import com.access.dto.AttackAttemptDto;
+import com.access.dto.ServiceDto;
 import com.access.service.GroupNotifierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class GroupNotifierApplication {
     @Value("${app.mail.notifier.subject:attack attempt}")
-    private String subject;
+    private String subject = "Attack attempt from ip ";
     final JavaMailSender mailSender;
     final GroupNotifierService groupNotifierService;
 
@@ -37,13 +38,33 @@ public class GroupNotifierApplication {
         List<String> services = attackAttemptDto.services();
         List<String> emails = groupNotifierService.getMails(services);
         log.debug("received mail addresses are: {}", String.join(", ", emails));
-        SimpleMailMessage smm = new SimpleMailMessage();
-        smm.setTo(emails.toArray(new String[0]));
-        smm.setText(getText(attackAttemptDto));
+        for (int i = 0; i < emails.size(); i++) {
+            SimpleMailMessage smm = new SimpleMailMessage();
+            smm.setTo(emails.get(i));
+            smm.setText(getText(services.get(i), attackAttemptDto.timestamp(), attackAttemptDto.subnet()));
+            smm.setSubject(getSubject(attackAttemptDto.subnet()));
+            mailSender.send(smm);
+            log.debug("Mail sent to: {}", emails.get(i));
+        }
     }
 
-    private String getText(AttackAttemptDto attackAttemptDto) {
-        String text = String.format("Service ");
+    private String getSubject(String subnet) {
+        String res = subject + subnet;
+        log.debug("subject: {} ", res);
+        return res;
+    }
+
+    private String getText(String serviceName, Long timestamp, String subnet) {
+        String text = String.format("Service %s attack attempt at %d from ip %s", serviceName,
+                timestamp, subnet);
         return text;
+    }
+    @Bean
+    Consumer<ServiceDto> updateEmailsConsumer() {
+        return this::updateProcessing;
+    }
+
+    private void updateProcessing(ServiceDto serviceDto) {
+        groupNotifierService.updateCache(serviceDto);
     }
 }
