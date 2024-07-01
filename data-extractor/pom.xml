@@ -6,9 +6,11 @@
         <groupId>com.access</groupId>
         <artifactId>access-analyzer</artifactId>
         <version>0.0.1</version>
+        <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
+    <groupId>com.access</groupId>
     <artifactId>data-extractor</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>data-extractor</name>
     <description>data-extractor</description>
     <properties>
@@ -24,6 +26,18 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
     </dependencies>
 
